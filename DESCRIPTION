@@ -1,0 +1,15 @@
+Package: rMallet
+Type: Package
+Title: A wrapper for the Java-based MALLET package
+Version: 0.1.0
+Date: 2021-03-10
+Authors@R: person("Matthew", "Jockers", email = "mjockers@gmail.com",
+  role = c("aut", "cre"))
+Maintainer: Matthew Jockers <mjockers@gmail.com>
+Description: rMallet is a wrapper for the popular Java Mallet package.  
+  Use of this wrapper requires that you have MALLET installed on your system.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Imports: dplyr, magrittr, readr, rlang
