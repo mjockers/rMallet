@@ -193,11 +193,14 @@ train_topics <- function(
   word_topic_counts_file = NULL,
   num_threads = 1
   ){
-  output_state_path <- paste(output_dir, paste("state", num_topics, "gz", sep="."), sep="/")
-  output_keys_path <- paste(output_dir, paste("keys", num_topics, "txt", sep="."), sep="/")
-  output_doc_topics_path <- paste(output_dir, paste("doc_topics", num_topics, "txt", sep="."), sep="/")
-  output_model_path <- paste(output_dir, paste("model", num_topics, "mallet", sep="."), sep="/")
-  inferencer_path <- paste(output_dir, paste("model", num_topics, "inferencer", sep="."), sep="/")
+  output_state_path <- paste(output_dir, paste("state", "gz", sep="."), sep="/")
+  output_keys_path <- paste(output_dir, paste("keys", "txt", sep="."), sep="/")
+  output_doc_topics_path <- paste(output_dir, paste("doc_topics", "txt", sep="."), sep="/")
+  output_model_path <- paste(output_dir, paste("model",  "mallet", sep="."), sep="/")
+  inferencer_path <- paste(output_dir, paste("model", "inferencer", sep="."), sep="/")
+  parameters_path <- paste(output_dir, paste("model", "parameters", "csv", sep="."), sep="/")
+  x <- tibble::tibble(num_topics = num_topics, num_iterations = num_iterations, num_top_words = num_top_words)
+  readr::write_csv(x, file = parameters_path)
   topic_word_weights_path <- topic_word_weights_file
   word_topic_counts_path <- word_topic_counts_file
   cmd <- paste("cd", MALLET_PATH,  "&& ")
@@ -240,7 +243,8 @@ train_topics <- function(
       model = output_model_path,
       inferencer = inferencer_path,
       topic_word_weights = topic_word_weights_path,
-      word_topic_counts = word_topic_counts_path
+      word_topic_counts = word_topic_counts_path,
+      parameters = parameters_path
     )
   )
 }
