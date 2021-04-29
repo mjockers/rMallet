@@ -10,7 +10,7 @@ import_dir(
   output_dir,
   keep_sequences = TRUE,
   remove_stops = FALSE,
-  extra_stopwords = NULL
+  stoplist_file = NULL
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ import_dir(
 
 \item{remove_stops}{TRUE|FALSE}
 
-\item{extra_stopwords}{path to file with whitespace-separated words default = NULL}
+\item{stoplist_file}{path to file with newline-separated words default = NULL}
 }
 \description{
 load the contents of a directory into mallet instances (one per file)

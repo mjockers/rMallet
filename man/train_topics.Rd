@@ -27,6 +27,16 @@ train_topics(
 \item{num_topics}{the number of topics to collect}
 
 \item{num_iterations}{The number of iterations of Gibbs sampling.}
+
+\item{random_seed}{useful to make process repeatable}
+
+\item{num_top_words}{the number of top words to show in console and keys file}
+
+\item{topic_word_weights_file}{a file path}
+
+\item{word_topic_counts_file}{a file path}
+
+\item{num_threads}{number of threads to use.}
 }
 \description{
 train a topic model from Mallet data files

@@ -7,7 +7,7 @@
 get_word_weights(word_weights_path)
 }
 \arguments{
-\item{word_topic_counts_path}{location of topic word weights file output from calling train_topics}
+\item{word_weights_path}{location of topic word weights file output from calling train_topics}
 }
 \description{
 Extract the word weights file.

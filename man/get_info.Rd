@@ -28,7 +28,7 @@ get_info(
 
 \item{print_features}{Print the data alphabet, one feature per line. TRUE|FALSE}
 
-\item{print_feature_counts}{Print feature names, feature counts (ie term frequency), and feature index counts (ie document frequency). TRUE|FALSE}
+\item{print_feature_counts}{Print feature names, feature counts (i.e. term frequency), and feature index counts (i.e. document frequency). TRUE|FALSE}
 
 \item{print_matrix}{Print word/document matrix in the specified format (a|s)(b|i)(n|w|c|e), for (all vs. sparse), (binary vs. integer), (number vs. word vs. combined vs. empty) Defaut is sic}
 }

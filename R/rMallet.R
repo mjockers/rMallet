@@ -5,7 +5,7 @@
 ########################################################
 
 build_model_interactively <- function(){
-  base_directory <-  readline("Enter a path to a base directory.\nIf it does not already exist, R will create a new sub-directory titled MODEL inside this base directory.\nIf you wish to use your current working directory, simply hit return:")
+  base_directory <-  readline("Enter a path to a base directory. If it does not already exist, R will create a new sub-directory titled MODEL inside this base directory. If you wish to use your current working directory, simply hit return:")
   if(base_directory == ""){
     base_directory <- getwd()
   }
@@ -22,21 +22,18 @@ build_model_interactively <- function(){
   }
 
   input_directory <-  readline("Enter a path to a directory of files to be modeled: ")
-
   num_topics <- readline("Enter the number of topics you wish to model, e.g. 20: ")
   num_iterations <- readline("Enter the number of iterations you wish to perform, e.g. 200: ")
-
   MALLET_PATH <- readline("Enter the path to your installation of Mallet, e.g. /Applications/Mallet-Dev/: ")
-
-  extra_stops <- readline("Enter/paste comma seperated list of extra stopwords or leave blank to skip: ")
-
+  stops <- readline("Enter/paste space seperated list of extra stopwords or leave blank to skip: ")
   output_dir <- file.path(base_directory, model_name, "MODEL")
 
-  if(length(extra_stops) == ""){
-    extra_stops <- "NULL"
-    write(paste(extra_stops, collapse = " "), file = file.path(output_dir, "extra_stops.txt"))
+  if(stops == ""){
+    stoplist_file <- ""
+    write(paste(stoplist_file, collapse = " "), file = file.path(output_dir, "stoplist_file.txt"))
   } else {
-    write(paste(sort(unique(extra_stops)), collapse = " "), file = file.path(output_dir, "extra_stops.txt"))
+    stoplist_file <- gsub("\\s+", "\r", stops)
+    write(paste(sort(unique(stoplist_file)), collapse = " "), file = file.path(output_dir, "stoplist_file.txt"))
   }
 
   cat(
@@ -49,18 +46,15 @@ build_model_interactively <- function(){
     num_topics,
     "\nNumber of iterations: ",
     num_iterations,
-    "\nExtra stops: ",
-    extra_stops,
+    "\nStop words: ",
+    stops,
     "\nPath to Mallet: ",
     MALLET_PATH,
     "\nModel build location: ",
     file.path(base_directory, model_name, "MODEL")
     )
-
   proceed <- readline("That's it! Hit return to start the build process or type 'CANCEL' to abort the build: ")
-
   if(proceed == 'CANCEL') stop("Your job has been aborted.  Have a nice day:-)")
-
   cat("Creating instance list from files in", input_directory, "\n")
 
   input_training_file <- import_dir(
@@ -68,8 +62,8 @@ build_model_interactively <- function(){
     input_directory,
     output_dir,
     keep_sequences = TRUE,
-    remove_stops = FALSE,
-    extra_stopwords = file.path(output_dir, "extra_stops.txt")
+    remove_stops = TRUE,
+    stoplist_file = file.path(output_dir, "stoplist_file.txt")
   )
 
   cat("Building model from instance list, smoke 'em if you got 'em, this can take a while....\n")
@@ -99,7 +93,7 @@ build_model_interactively <- function(){
 #' @param output_dir path to output directory
 #' @param keep_sequences TRUE|FALSE
 #' @param remove_stops TRUE|FALSE
-#' @param extra_stopwords path to file with whitespace-separated words default = NULL
+#' @param stoplist_file path to file with newline-separated words default = NULL
 #' @export
 ########################################################
 import_dir <- function(
@@ -108,7 +102,7 @@ import_dir <- function(
   output_dir,
   keep_sequences = TRUE,
   remove_stops = FALSE,
-  extra_stopwords = NULL
+  stoplist_file = NULL
   ){
   output_file_path <- file.path(output_dir, "instances.mallet")
   cmd <- paste("cd", MALLET_PATH,  "&& ")
@@ -123,8 +117,8 @@ import_dir <- function(
     keep_sequences,
     "--remove-stopwords",
     remove_stops,
-    "--extra-stopwords",
-    extra_stopwords
+    "--stoplist-file",
+    stoplist_file
   )
   system(cmd)
   return(output_file_path)
@@ -176,9 +170,14 @@ import_file <- function(
 #' @description train a topic model from Mallet data files
 #' @param MALLET_PATH path to local mallet directory
 #' @param input_file path to file output from calling import_dir or import_file
-#' @param num_topics the number of topics to collect
 #' @param output_dir path to output directory
+#' @param num_topics the number of topics to collect
 #' @param num_iterations The number of iterations of Gibbs sampling.
+#' @param random_seed useful to make process repeatable
+#' @param num_top_words the number of top words to show in console and keys file
+#' @param topic_word_weights_file a file path
+#' @param word_topic_counts_file a file path
+#' @param num_threads number of threads to use.
 #' @export
 ########################################################
 train_topics <- function(
@@ -257,6 +256,7 @@ train_topics <- function(
 #' @param input_string a string of words to infer on
 #' @param pipe_from_path path to instances file created during import_dir
 #' @param inferencer_path path to inferencer file created during train_topics
+#' @importFrom utils "read.table"
 #' @export
 ########################################################
 infer_topics <- function(
@@ -351,7 +351,7 @@ get_topic_keys <- function(
 ########################################################
 #' Get the topic word weights
 #' @description Extract the word weights file.
-#' @param word_topic_counts_path location of topic word weights file output from calling train_topics
+#' @param word_weights_path location of topic word weights file output from calling train_topics
 #' @export
 ########################################################
 get_word_weights <- function(word_weights_path){
@@ -361,7 +361,7 @@ get_word_weights <- function(word_weights_path){
 ########################################################
 #' Get the word counts per topic
 #' @description Extract the word counts for each topic
-#' @param word_topic_counts_path location of topic word weights file output from calling train_topics
+#' @param word_counts_path location of topic word weights file output from calling train_topics
 #' @export
 ########################################################
 get_word_counts <- function(word_counts_path){
@@ -377,7 +377,7 @@ get_word_counts <- function(word_counts_path){
 #' @param print_infogain Print top N words by information gain, sorted. Default is 0
 #' @param print_labels Print class labels known to instance list, one per line. TRUE|FALSE
 #' @param print_features Print the data alphabet, one feature per line. TRUE|FALSE
-#' @param print_feature_counts Print feature names, feature counts (ie term frequency), and feature index counts (ie document frequency). TRUE|FALSE
+#' @param print_feature_counts Print feature names, feature counts (i.e. term frequency), and feature index counts (i.e. document frequency). TRUE|FALSE
 #' @param print_matrix Print word/document matrix in the specified format (a|s)(b|i)(n|w|c|e), for (all vs. sparse), (binary vs. integer), (number vs. word vs. combined vs. empty) Defaut is sic
 #' @export
 ########################################################
