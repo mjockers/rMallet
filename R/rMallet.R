@@ -429,7 +429,7 @@ prune <- function(
   input = "-",
   output = "-",
   prune_count = 0,
-  prune_doc_freq = 0,
+  prune_document_freq = 0,
   min_idf = 0.0,
   max_idf = Inf
 ){
