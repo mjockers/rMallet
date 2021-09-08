@@ -422,6 +422,7 @@ get_info <- function(
 #' @param prune_doc_freq Reduce features to those that occur in more than N contexts
 #' @param min_idf Remove frequent features using inverse document frequency less than this value.
 #' @param max_idf Remove rare features with inverse document frequency greater than this value.
+#' @return path to the resulting pruned instances file.
 prune <- function(
   input = "-",
   output = "-",
@@ -448,6 +449,7 @@ prune <- function(
     max_idf
   )
   system(cmd)
+  return(output)
 }
 
 
