@@ -10,7 +10,7 @@ prune(
   prune_count = 0,
   prune_document_freq = 0,
   min_idf = 0,
-  max_idf = Inf
+  max_idf = "Infinity"
 )
 }
 \arguments{
