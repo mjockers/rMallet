@@ -413,6 +413,42 @@ get_info <- function(
   system(cmd)
 }
 
+########################################################
+#' Prune vocabulary
+#' @description Prune removes features based on frequency or information gain.  This is an impoverished version of the core function in Mallet that allows for more options.
+#' @param input path to mallet.instances file
+#' @param output path to write pruned instances file
+#' @param prune_count Reduce features to those that occur more than N times.
+#' @param prune_doc_freq Reduce features to those that occur in more than N contexts
+#' @param min_idf Remove frequent features using inverse document frequency less than this value.
+#' @param max_idf Remove rare features with inverse document frequency greater than this value.
+prune <- function(
+  input = "-",
+  output = "-",
+  prune_count = 0,
+  prune_doc_freq = 0,
+  min_idf = 0.0,
+  max_idf = Inf
+){
+  cmd <- paste("cd", MALLET_PATH,  "&& ")
+  cmd <- paste(
+    cmd,
+    "bin/mallet prune",
+    "--input",
+    input,
+    "--output",
+    output,
+    "--prune-count",
+    prune_count,
+    "--prune-doc-freq",
+    prune_doc_freq,
+    "--min-idf",
+    min_idf,
+    "--max-idf",
+    max_idf
+  )
+  system(cmd)
+}
 
 
 # OTHER FUNCTIONS TO BE IMPLEMENTED....???
@@ -439,10 +475,6 @@ get_info <- function(
 #
 # evaluate-topics    estimate the probability of new documents under a trained model
 # evaluate_topics <- function(){
-# }
-#
-# prune              remove features based on frequency or information gain
-# prune <- function(){
 # }
 #
 # split              divide data into testing, training, and validation portions
