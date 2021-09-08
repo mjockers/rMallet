@@ -20,11 +20,11 @@ prune(
 
 \item{prune_count}{Reduce features to those that occur more than N times.}
 
-\item{prune_doc_freq}{Reduce features to those that occur in more than N contexts}
-
 \item{min_idf}{Remove frequent features using inverse document frequency less than this value.}
 
 \item{max_idf}{Remove rare features with inverse document frequency greater than this value.}
+
+\item{prune_document_freq}{Reduce features to those that occur in more than N contexts}
 }
 \value{
 path to the resulting pruned instances file.

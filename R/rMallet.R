@@ -419,7 +419,7 @@ get_info <- function(
 #' @param input path to mallet.instances file
 #' @param output path to write pruned instances file
 #' @param prune_count Reduce features to those that occur more than N times.
-#' @param prune_doc_freq Reduce features to those that occur in more than N contexts
+#' @param prune_document_freq Reduce features to those that occur in more than N contexts
 #' @param min_idf Remove frequent features using inverse document frequency less than this value.
 #' @param max_idf Remove rare features with inverse document frequency greater than this value.
 #' @return path to the resulting pruned instances file.
@@ -443,8 +443,8 @@ prune <- function(
     output,
     "--prune-count",
     prune_count,
-    "--prune-doc-freq",
-    prune_doc_freq,
+    "--prune-document-freq",
+    prune_document_freq,
     "--min-idf",
     min_idf,
     "--max-idf",
