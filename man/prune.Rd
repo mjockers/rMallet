@@ -26,6 +26,9 @@ prune(
 
 \item{max_idf}{Remove rare features with inverse document frequency greater than this value.}
 }
+\value{
+path to the resulting pruned instances file.
+}
 \description{
 Prune removes features based on frequency or information gain.  This is an impoverished version of the core function in Mallet that allows for more options.
 }
