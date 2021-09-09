@@ -297,7 +297,7 @@ infer_topics <- function(
   data_out <- read.table(
     temp_topics,
     header=FALSE,
-    skip=3,
+    skip=1,
     stringsAsFactors=FALSE,
     col.names = "Prop"
   )
