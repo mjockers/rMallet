@@ -9,7 +9,8 @@ infer_topics(
   bookId,
   input_string,
   pipe_from_path,
-  inferencer_path
+  inferencer_path,
+  remove_id_and_name_row = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ infer_topics(
 \item{pipe_from_path}{path to instances file created during import_dir}
 
 \item{inferencer_path}{path to inferencer file created during train_topics}
+
+\item{remove_id_and_name_row}{Set TRUE to remove the first two rows of the output table.  These rows contain the doc ID and doc title.}
 }
 \description{
 use a trained topic model to infer topics for new documents

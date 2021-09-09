@@ -256,6 +256,7 @@ train_topics <- function(
 #' @param input_string a string of words to infer on
 #' @param pipe_from_path path to instances file created during import_dir
 #' @param inferencer_path path to inferencer file created during train_topics
+#' @param remove_id_and_name_row Set TRUE to remove the first two rows of the output table.  These rows contain the doc ID and doc title.
 #' @importFrom utils "read.table"
 #' @export
 ########################################################
@@ -264,10 +265,12 @@ infer_topics <- function(
   bookId,
   input_string,
   pipe_from_path,
-  inferencer_path
+  inferencer_path,
+  remove_id_and_name_row = FALSE
   ){
   temp_file <- tempfile(paste(bookId, "temp_text.txt", sep = "_"))
-  write(input_string, file = temp_file)
+  clean_str <- gsub("\\s+|\\r+", " ", paste(bookId, input_string, collapse = " "))
+  write(clean_str, file = temp_file)
   temp_instances <- tempfile(paste(bookId, "inferred_instances.mallet", sep="_"))
   temp_topics <- tempfile(paste(bookId, "inferred_doc_topics_file.txt", sep = "_"))
   cmd <- paste("cd", MALLET_PATH,  "&& ")
@@ -296,12 +299,15 @@ infer_topics <- function(
   system(cmd)
   data_out <- read.table(
     temp_topics,
-    header=FALSE,
-    skip=1,
-    stringsAsFactors=FALSE,
+    header = FALSE,
+    skip = 1,
+    stringsAsFactors = FALSE,
     col.names = "Prop"
-  ) # %>% slice(c(-1,-2)) %>% #remove the first two rows!
-    # mutate(Prop = as.numeric(Prop))
+  ) %>%
+    mutate(Prop = as.numeric(Prop))
+  if(remove_id_and_name_row){
+    data_out <- slice(data_out, c(-1,-2))
+  }
   file.remove(temp_instances)
   file.remove(temp_topics)
   file.remove(temp_file)
