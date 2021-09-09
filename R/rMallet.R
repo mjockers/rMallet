@@ -300,8 +300,8 @@ infer_topics <- function(
     skip=1,
     stringsAsFactors=FALSE,
     col.names = "Prop"
-  ) %>% slice(c(-1,-2)) %>% #remove the first two rows!
-    mutate(Prop = as.numeric(Prop))
+  ) # %>% slice(c(-1,-2)) %>% #remove the first two rows!
+    # mutate(Prop = as.numeric(Prop))
   file.remove(temp_instances)
   file.remove(temp_topics)
   file.remove(temp_file)
