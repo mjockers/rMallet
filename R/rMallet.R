@@ -303,10 +303,10 @@ infer_topics <- function(
     skip = 1,
     stringsAsFactors = FALSE,
     col.names = "Prop"
-  ) %>%
-    mutate(Prop = as.numeric(Prop))
+  )
   if(remove_id_and_name_row){
-    data_out <- slice(data_out, c(-1,-2))
+    data_out <- slice(data_out, c(-1,-2)) %>%
+      mutate(Prop = as.numeric(Prop))
   }
   file.remove(temp_instances)
   file.remove(temp_topics)
