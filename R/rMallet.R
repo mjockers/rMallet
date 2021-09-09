@@ -297,9 +297,9 @@ infer_topics <- function(
   data_out <- read.table(
     temp_topics,
     header=FALSE,
-    skip=1,
+    skip=3,
     stringsAsFactors=FALSE,
-    col.names = F
+    col.names = "Prop"
   )
   file.remove(temp_instances)
   file.remove(temp_topics)
